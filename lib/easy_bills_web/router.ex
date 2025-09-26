@@ -20,33 +20,15 @@ defmodule EasyBillsWeb.Router do
   scope "/", EasyBillsWeb do
     pipe_through :browser
 
-    # get "/", PageController, :home
-    live "/", HomeLive
+    scope "/", Landing do
+      live "/", LandingLive, :index
+    end
   end
 
   # Other scopes may use custom stacks.
   # scope "/api", EasyBillsWeb do
   #   pipe_through :api
   # end
-
-  # Enable LiveDashboard and Swoosh mailbox preview in development
-  if Application.compile_env(:easy_bills, :dev_routes) do
-    # If you want to use the LiveDashboard in production, you should put
-    # it behind authentication and allow only admins to access it.
-    # If your application does not have an admins-only section yet,
-    # you can use Plug.BasicAuth to set up some basic authentication
-    # as long as you are also using SSL (which you should anyway).
-    import Phoenix.LiveDashboard.Router
-
-    if Mix.env() == :dev do
-      scope "/dev" do
-        pipe_through :browser
-
-        live_dashboard "/dashboard", metrics: EasyBillsWeb.Telemetry
-        forward "/mailbox", Plug.Swoosh.MailboxPreview
-      end
-    end
-  end
 
   ## Authentication routes
 
@@ -88,6 +70,25 @@ defmodule EasyBillsWeb.Router do
       on_mount: [{EasyBillsWeb.UserAuth, :mount_current_user}] do
       live "/confirm/:token", UserConfirmationLive, :edit
       live "/confirm", UserConfirmationInstructionsLive, :new
+    end
+  end
+
+  # Enable LiveDashboard and Swoosh mailbox preview in development
+  if Application.compile_env(:easy_bills, :dev_routes) do
+    # If you want to use the LiveDashboard in production, you should put
+    # it behind authentication and allow only admins to access it.
+    # If your application does not have an admins-only section yet,
+    # you can use Plug.BasicAuth to set up some basic authentication
+    # as long as you are also using SSL (which you should anyway).
+    import Phoenix.LiveDashboard.Router
+
+    if Mix.env() == :dev do
+      scope "/dev" do
+        pipe_through :browser
+
+        live_dashboard "/dashboard", metrics: EasyBillsWeb.Telemetry
+        forward "/mailbox", Plug.Swoosh.MailboxPreview
+      end
     end
   end
 end

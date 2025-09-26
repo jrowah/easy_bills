@@ -5,7 +5,7 @@ defmodule EasyBills.MixProject do
     [
       app: :easy_bills,
       version: "0.1.0",
-      elixir: "~> 1.16.1",
+      elixir: "~> 1.17.2",
       elixirc_paths: elixirc_paths(Mix.env()),
       start_permanent: Mix.env() == :prod,
       aliases: aliases(),
@@ -107,7 +107,7 @@ defmodule EasyBills.MixProject do
         "credo --strict",
         "dialyzer"
       ],
-      "ci.formatting": ["format --check-formatted", "cmd --cd assets npx prettier -c .."],
+      "ci.formatting": ["format --check-formatted", "cmd --cd assets npx prettier -c ."],
       "ci.migrations": [
         "ecto.create --quiet",
         "ecto.migrate --quiet",
