@@ -21,7 +21,8 @@ defmodule EasyBillsWeb.Access.ConfirmationInstructionsLive do
       </.simple_form>
 
       <p class="text-center mt-4">
-        <.link href={~p"/access/register"}>Register</.link> | <.link href={~p"/access/login"}>Log in</.link>
+        <.link href={~p"/access/register"}>Register</.link>
+        | <.link href={~p"/access/login"}>Log in</.link>
       </p>
     </div>
     """
