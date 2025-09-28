@@ -49,7 +49,7 @@ defmodule EasyBillsWeb.CoreComponents do
       phx-mounted={@show && show_modal(@id)}
       phx-remove={hide_modal(@id)}
       data-cancel={JS.exec(@on_cancel, "phx-remove")}
-      class="relative z-50 hidden"
+      class="relative z-30 hidden"
     >
       <div
         id={"#{@id}-bg"}
@@ -64,35 +64,51 @@ defmodule EasyBillsWeb.CoreComponents do
         aria-modal="true"
         tabindex="0"
       >
-        <div class="flex min-h-full items-center justify-center">
-          <div class="w-full max-w-3xl p-4 sm:p-6 lg:py-8">
-            <.focus_wrap
-              id={"#{@id}-container"}
-              phx-window-keydown={JS.exec("data-cancel", to: "##{@id}")}
-              phx-key="escape"
-              phx-click-away={JS.exec("data-cancel", to: "##{@id}")}
-              class="shadow-zinc-700/10 ring-zinc-700/10 relative hidden rounded-2xl bg-white p-14 shadow-lg ring-1 transition"
-            >
-              <div class="absolute top-6 right-5">
-                <button
-                  phx-click={JS.exec("data-cancel", to: "##{@id}")}
-                  type="button"
-                  class="-m-3 flex-none p-3 opacity-20 hover:opacity-40"
-                  aria-label={gettext("close")}
-                >
-                  <.icon name="hero-x-mark-solid" class="h-5 w-5" />
-                </button>
-              </div>
-              <div id={"#{@id}-content"}>
-                <%= render_slot(@inner_block) %>
-              </div>
-            </.focus_wrap>
-          </div>
+        <div class="w-1/2 sm:w-2/3 max-w-3xl">
+          <.focus_wrap
+            id={"#{@id}-container"}
+            phx-window-keydown={JS.exec("data-cancel", to: "##{@id}")}
+            phx-key="escape"
+            phx-click-away={JS.exec("data-cancel", to: "##{@id}")}
+            class="shadow-zinc-700/10 ring-zinc-700/10 relative hidden rounded-2xl bg-white pl-[20%] py-8 pr-8 shadow-lg ring-1 transition"
+          >
+            <div class="absolute top-6 right-5">
+              <button
+                phx-click={JS.exec("data-cancel", to: "##{@id}")}
+                type="button"
+                class="-m-3 flex-none p-3 opacity-20 hover:opacity-40"
+                aria-label={gettext("close")}
+              >
+                <.icon name="hero-x-mark-solid" class="h-5 w-5" />
+              </button>
+            </div>
+            <div id={"#{@id}-content"}>
+              <%= render_slot(@inner_block) %>
+            </div>
+          </.focus_wrap>
         </div>
       </div>
     </div>
     """
   end
+
+  @doc """
+  Renders a profile modal.
+
+  ## Examples
+
+      <.profile_modal id="confirm-modal">
+        This is a modal.
+      </.profile_modal>
+
+  JS commands may be passed to the `:on_cancel` to configure
+  the closing/cancel event, for example:
+
+      <.modal id="confirm" on_cancel={JS.navigate(~p"/posts")}>
+        This is another modal.
+      </.modal>
+
+  """
 
   @doc """
   Renders a profile modal.
@@ -263,7 +279,7 @@ defmodule EasyBillsWeb.CoreComponents do
   def simple_form(assigns) do
     ~H"""
     <.form :let={f} for={@for} as={@as} {@rest}>
-      <div class="mt-10 space-y-6">
+      <div class="mt-2 space-y-4">
         <%= render_slot(@inner_block, f) %>
         <div :for={action <- @actions} class="mt-2 flex items-center justify-between gap-6">
           <%= render_slot(action, f) %>
@@ -588,13 +604,15 @@ defmodule EasyBillsWeb.CoreComponents do
         <:item title="Views"><%= @post.views %></:item>
       </.list>
   """
+  attr :class, :string, default: nil
+
   slot :item, required: true do
     attr :title, :string, required: true
   end
 
   def list(assigns) do
     ~H"""
-    <div class="mt-14">
+    <div class={["mt-14", @class]}>
       <dl class="-my-4 divide-y divide-zinc-100">
         <div :for={item <- @item} class="flex gap-4 py-4 text-sm leading-6 sm:gap-8">
           <dt class="w-1/4 flex-none text-zinc-500"><%= item.title %></dt>
@@ -612,14 +630,16 @@ defmodule EasyBillsWeb.CoreComponents do
 
       <.back navigate={~p"/posts"}>Back to posts</.back>
   """
+  attr :class, :string, default: nil
+
   attr :navigate, :any, required: true
   slot :inner_block, required: true
 
   def back(assigns) do
     ~H"""
-    <div class="mt-16">
+    <div class={[@class]}>
       <.link navigate={@navigate} class="text-sm font-semibold leading-6 text-purple-500">
-        <.icon name="hero-arrow-left-solid" class="h-3 w-3" />
+        <.icon name="hero-chevron-left" class="h-3 w-3" />
         <%= render_slot(@inner_block) %>
       </.link>
     </div>

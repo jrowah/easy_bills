@@ -1,0 +1,139 @@
+<NavComponent.navbar current_user={@current_user} />
+<div class="max-w-2xl pt-4 mx-auto space-y-6">
+  <.back navigate={~p"/invoices"}>Go Back</.back>
+  <.header class="p-6 bg-white text-xs">
+    <:actions>
+      <.link patch={~p"/invoices/#{@invoice}/show/edit"} phx-click={JS.push_focus()}>
+        <button class="bg-gray-100 p-4 px-6 text-gray-400 rounded-3xl font-bold mr-4 min-w-12">
+          Edit
+        </button>
+      </.link>
+    </:actions>
+    <:actions>
+      <.link
+        class="bg-red-500 p-4 text-white rounded-3xl font-bold mr-4"
+        phx-click={JS.push("delete", value: %{id: @invoice.id})}
+        data-confirm="Are you sure?"
+      >
+        Delete
+      </.link>
+    </:actions>
+    <:actions>
+      <.link
+        class="bg-purple-600 p-4 text-white rounded-3xl font-bold"
+        phx-click={JS.push("mark-as-paid", value: %{id: @invoice.id})}
+        data-confirm="Are you sure?"
+      >
+        Mark as Paid
+      </.link>
+    </:actions>
+  </.header>
+  <div class=" bg-white p-8">
+    <div class="flex justify-between">
+      <div class="text-xs font-bold mt-2">
+        <span class="text-gray-400">#</span><%= transform_id(@invoice.id) %>
+        <span class="text-gray-400 block"><%= @invoice.description %></span>
+      </div>
+
+      <div>
+        <ul class="text-end text-xs">
+          <li class="font-medium mt-2 text-gray-400">
+            <%= @current_user.business_address.street_address %>
+          </li>
+          <li class="mt-2 text-gray-400">
+            <%= @current_user.business_address.city %>
+          </li>
+          <li class="mt-2 text-gray-400">
+            <%= @current_user.business_address.postal_code %>
+          </li>
+          <li class="mt-2 text-gray-400">
+            <%= @current_user.business_address.country %>
+          </li>
+          <li class="text-sm font-medium mt-2 text-gray-400">
+            <%= @current_user.business_address.phone_number %>
+          </li>
+        </ul>
+      </div>
+    </div>
+    <section class="text-xs flex justify-between mt-4">
+      <div class="flex flex-col justify-between">
+        <div class="space-y-2">
+          <h3 class="mt-2 text-gray-400">Invoice Date</h3>
+          <p class="font-bold"><%= @invoice.inserted_at %></p>
+        </div>
+        <div class="space-y-2">
+          <h3 class="mt-2 text-gray-400">Payment Due</h3>
+          <p class="font-bold"><%= @invoice.inserted_at %></p>
+        </div>
+      </div>
+      <div>
+        <h3 class="mt-2 text-gray-400">Bill To</h3>
+        <ul class="text-xs">
+          <li class="font-medium mt-2 text-gray-400">
+            <%= @invoice.client_street_address %>
+          </li>
+          <li class="mt-2 text-gray-400">
+            <%= @invoice.client_city %>
+          </li>
+          <li class="mt-2 text-gray-400">
+            <%= @invoice.client_postal_code %>
+          </li>
+          <li class="mt-2 text-gray-400">
+            <%= @invoice.client_country %>
+          </li>
+        </ul>
+      </div>
+      <div>
+        <h3 class="mt-2 text-gray-400">Sent To</h3>
+        <p class="font-bold"><%= @invoice.client_email %></p>
+      </div>
+    </section>
+
+    <table class="totals">
+      <thead class="text-sm">
+        <tr class="text-gray-400">
+          <th>Item Name</th>
+          <th>QTY.</th>
+          <th>Price</th>
+          <th>Total</th>
+        </tr>
+      </thead>
+      <tbody class="text-sm">
+        <tr>
+          <td><%= @invoice.description %></td>
+          <td>1</td>
+          <td>£156.00</td>
+          <td>$156.00</td>
+        </tr>
+        <tr>
+          <td><%= @invoice.description %></td>
+          <td>2</td>
+          <td>£200.00</td>
+          <td>£400.00</td>
+        </tr>
+      </tbody>
+      <tfoot>
+        <tr>
+          <td colspan="3">Amount Due</td>
+          <%!-- <td>£<%= @invoice.amount %></td> --%>
+        </tr>
+      </tfoot>
+    </table>
+  </div>
+
+  <.modal
+    :if={@live_action == :edit}
+    id="invoice-modal"
+    show
+    on_cancel={JS.patch(~p"/invoices/#{@invoice}")}
+  >
+    <.live_component
+      module={EasyBillsWeb.InvoiceLive.FormComponent}
+      id={@invoice.id}
+      title={@page_title}
+      action={@live_action}
+      invoice={@invoice}
+      patch={~p"/invoices/#{@invoice}"}
+    />
+  </.modal>
+</div>

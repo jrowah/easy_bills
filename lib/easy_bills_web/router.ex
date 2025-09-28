@@ -69,6 +69,11 @@ defmodule EasyBillsWeb.Router do
       layout: {EasyBillsWeb.Layouts, :dashboard_live} do
       live "/", Home.IndexLive, :index
       live "/invoices", Invoices.IndexLive, :index
+      live "/invoices/new", InvoiceLive.Index, :new
+      live "/invoices/:id/edit", InvoiceLive.Index, :edit
+
+      live "/invoices/:id", InvoiceLive.Show, :show
+      live "/invoices/:id/show/edit", InvoiceLive.Show, :edit
 
       live "/expenses", Expenses.IndexLive, :index
 
