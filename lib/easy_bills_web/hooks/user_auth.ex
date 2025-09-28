@@ -30,17 +30,6 @@ defmodule EasyBillsWeb.Hooks.UserAuth do
   """
   def log_in_user(conn, user, params \\ %{})
 
-  def log_in_user(conn, %User{avatar_url: nil} = user, params) do
-    token = Accounts.generate_user_session_token(user)
-    user_return_to = get_session(conn, :user_return_to)
-
-    conn
-    |> renew_session()
-    |> put_token_in_session(token)
-    |> maybe_write_remember_me_cookie(token, params)
-    |> redirect(to: user_return_to || signed_in_path_without_avatar(conn))
-  end
-
   def log_in_user(conn, %User{} = user, params) do
     token = Accounts.generate_user_session_token(user)
     user_return_to = get_session(conn, :user_return_to)
@@ -49,7 +38,7 @@ defmodule EasyBillsWeb.Hooks.UserAuth do
     |> renew_session()
     |> put_token_in_session(token)
     |> maybe_write_remember_me_cookie(token, params)
-    |> redirect(to: user_return_to || signed_in_path_with_avatar(conn))
+    |> redirect(to: user_return_to || signed_in_path(conn))
   end
 
   defp maybe_write_remember_me_cookie(conn, token, %{"remember_me" => "true"}) do
@@ -167,7 +156,7 @@ defmodule EasyBillsWeb.Hooks.UserAuth do
     socket = mount_current_user(socket, session)
 
     if socket.assigns.current_user do
-      {:halt, Phoenix.LiveView.redirect(socket, to: signed_in_path_with_avatar(socket))}
+      {:halt, Phoenix.LiveView.redirect(socket, to: signed_in_path(socket))}
     else
       {:cont, socket}
     end
@@ -187,7 +176,7 @@ defmodule EasyBillsWeb.Hooks.UserAuth do
   def redirect_if_user_is_authenticated(conn, _opts) do
     if conn.assigns[:current_user] do
       conn
-      |> redirect(to: signed_in_path_with_avatar(conn))
+      |> redirect(to: signed_in_path(conn))
       |> halt()
     else
       conn
@@ -207,7 +196,7 @@ defmodule EasyBillsWeb.Hooks.UserAuth do
       conn
       |> put_flash(:error, "You must log in to access this page.")
       |> maybe_store_return_to()
-      |> redirect(to: ~p"/login")
+      |> redirect(to: ~p"/access/login")
       |> halt()
     end
   end
@@ -224,7 +213,5 @@ defmodule EasyBillsWeb.Hooks.UserAuth do
 
   defp maybe_store_return_to(conn), do: conn
 
-  defp signed_in_path_with_avatar(_conn), do: ~p"/dashboard/invoices"
-
-  defp signed_in_path_without_avatar(_conn), do: ~p"/dashboard"
+  defp signed_in_path(_conn), do: ~p"/dashboard"
 end

@@ -52,7 +52,7 @@ defmodule EasyBillsWeb.CommonComponents.NavComponent do
           </h4>
           <div class="flex flex-col space-y-4 ml-24">
             <.link
-              navigate={~p"/invoices"}
+              navigate={~p"/dashboard"}
               class="text-[0.8125rem] leading-6 text-gray-500 font-semibold hover:text-zinc-700"
             >
               <div class="flex items-center space-x-3">
@@ -60,7 +60,7 @@ defmodule EasyBillsWeb.CommonComponents.NavComponent do
               </div>
             </.link>
             <.link
-              navigate={~p"/settings"}
+              navigate={~p"/dashboard/settings"}
               class="text-[0.8125rem] leading-6 text-gray-500 font-semibold hover:text-zinc-700"
             >
               <div class="flex items-center space-x-3">

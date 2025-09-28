@@ -1,7 +1,7 @@
 defmodule EasyBillsWeb.Router do
   use EasyBillsWeb, :router
 
-  import EasyBillsWeb.UserAuth
+  import EasyBillsWeb.Hooks.UserAuth
 
   pipeline :browser do
     plug :accepts, ["html"]
@@ -49,40 +49,33 @@ defmodule EasyBillsWeb.Router do
     end
 
     live_session :redirect_if_user_is_authenticated,
-      on_mount: [{EasyBillsWeb.UserAuth, :redirect_if_user_is_authenticated}] do
-      live "/register", UserRegistrationLive, :new
-      live "/login", UserLoginLive, :new
-      live "/reset_password", UserForgotPasswordLive, :new
-      live "/reset_password/:token", UserResetPasswordLive, :edit
+      on_mount: [{EasyBillsWeb.Hooks.UserAuth, :redirect_if_user_is_authenticated}] do
+      live "/register", RegistrationLive, :new
+      live "/login", LoginLive, :new
+      live "/reset_password", ForgotPasswordLive, :new
+      live "/reset_password/:token", ResetPasswordLive, :edit
     end
-
-    post "/login", UserSessionController, :create
   end
 
-  scope "/", EasyBillsWeb do
+  scope "/dashboard", EasyBillsWeb.Dashboard do
     pipe_through [:browser, :require_authenticated_user]
 
     live_session :require_authenticated_user,
-      on_mount: [{EasyBillsWeb.UserAuth, :ensure_authenticated}] do
-      live "/settings", UserSettingsLive, :edit_bio
-      live "/settings/edit_password", UserSettingsLive, :edit_password
-      live "/settings/edit_email_notifications", UserSettingsLive, :edit_email_notifications
-      live "/settings/confirm_email/:token", UserSettingsLive, :confirm_email
-      live "/welcome", UserWelcomeLive
-      live "/address", UserAddressLive
-      live "/invoices", InvoicesLive
-    end
-  end
+      on_mount: [
+        # {EasyBillsWeb.Hooks.UserAuth, :ensure_authenticated},
+        EasyBillsWeb.Dashboard.Hooks.Session
+      ],
+      root_layout: {EasyBillsWeb.Layouts, :dashboard},
+      layout: {EasyBillsWeb.Layouts, :dashboard_live} do
+      live "/", Home.IndexLive, :index
+      live "/invoices", Invoices.IndexLive, :index
 
-  scope "/", EasyBillsWeb do
-    pipe_through [:browser]
+      live "/expenses", Expenses.IndexLive, :index
 
-    delete "/logout", UserSessionController, :delete
-
-    live_session :current_user,
-      on_mount: [{EasyBillsWeb.UserAuth, :mount_current_user}] do
-      live "/confirm/:token", UserConfirmationLive, :edit
-      live "/confirm", UserConfirmationInstructionsLive, :new
+      live "/settings", Settings.IndexLive, :edit_bio
+      live "/settings/edit_password", Settings.IndexLive, :edit_password
+      live "/settings/edit_email_notifications", Settings.IndexLive, :edit_email_notifications
+      live "/settings/confirm_email/:token", Settings.IndexLive, :confirm_email
     end
   end
 

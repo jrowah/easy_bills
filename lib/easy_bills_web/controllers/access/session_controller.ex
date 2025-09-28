@@ -45,7 +45,7 @@ defmodule EasyBillsWeb.SessionController do
               :info,
               "Welcome to ExpenseTracker! To get started, please confirm your email."
             )
-            |> redirect(to: ~p"/auth/login")
+            |> redirect(to: ~p"/access/login")
 
           true ->
             conn

@@ -58,7 +58,11 @@ defmodule EasyBills.Accounts do
       ** (Ecto.NoResultsError)
 
   """
-  def get_user!(id), do: Repo.get!(User, id)
+  def get_user!(id) do
+    User
+    |> Repo.get!(id)
+    |> Repo.preload(:business_address)
+  end
 
   ## User registration
 
@@ -176,7 +180,7 @@ defmodule EasyBills.Accounts do
 
   ## Examples
 
-      iex> deliver_user_update_email_instructions(user, current_email, &url(~p"/settings/confirm_email/#{&1})")
+      iex> deliver_user_update_email_instructions(user, current_email, &url(~p"/dashboard/settings/confirm_email/#{&1})")
       {:ok, %{to: ..., body: ...}}
 
   """
@@ -197,6 +201,14 @@ defmodule EasyBills.Accounts do
     |> BusinessAddress.changeset(address_params)
     |> Ecto.Changeset.put_assoc(:user, user)
     |> Repo.insert()
+  end
+
+  @doc """
+  Update user to add avatar url
+  """
+
+  def add_user_avatar(changeset) do
+    Repo.update(changeset)
   end
 
   @doc """

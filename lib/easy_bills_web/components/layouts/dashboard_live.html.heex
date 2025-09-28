@@ -1,0 +1,9 @@
+<main>
+  <.flash_group flash={@flash} />
+    <div :if={not is_nil(@current_user) and not @pending_avatar_upload and not @pending_business_address}>
+  <%= @inner_content %>
+</div>
+<.live_component :if={@pending_avatar_upload} module={EasyBillsWeb.Dashboard.AddAvatar} id="profile-form" current_user={@current_user} />
+<.live_component :if={not @pending_avatar_upload and @pending_business_address} module={EasyBillsWeb.Dashboard.AddAddress} id="address-form" current_user={@current_user} />
+</main>
+
