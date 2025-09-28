@@ -95,7 +95,7 @@ defmodule EasyBillsWeb.OnboardingLive.UserRegistration.New do
           </.simple_form>
           <p class="mt-6 ml-[20%]">
             Already have an account?
-            <.link navigate={~p"/login"} class="font-semibold text-purple-400 hover:underline">
+            <.link navigate={~p"/access/login"} class="font-semibold text-purple-400 hover:underline">
               Sign in
             </.link>
           </p>

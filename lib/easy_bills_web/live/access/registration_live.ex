@@ -1,11 +1,11 @@
-defmodule EasyBillsWeb.UserRegistrationLive do
+defmodule EasyBillsWeb.Access.RegistrationLive do
   @moduledoc false
 
   use EasyBillsWeb, :live_view
 
   alias EasyBills.Accounts
   alias EasyBills.Accounts.User
-  alias EasyBillsWeb.OnboardingLive.Shared.SharedComponents
+  alias EasyBillsWeb.Access.SharedComponents
   alias EasyBillsWeb.OnboardingLive.UserRegistration
 
   @impl Phoenix.LiveView
@@ -47,7 +47,7 @@ defmodule EasyBillsWeb.UserRegistrationLive do
         {:ok, _} =
           Accounts.deliver_user_confirmation_instructions(
             user,
-            &url(~p"/confirm/#{&1}")
+            &url(~p"/access/confirm/#{&1}")
           )
 
         changeset = Accounts.change_user_registration(user)
@@ -72,13 +72,13 @@ defmodule EasyBillsWeb.UserRegistrationLive do
       user ->
         Accounts.deliver_user_confirmation_instructions(
           user,
-          &url(~p"/confirm/#{&1}")
+          &url(~p"/access/confirm/#{&1}")
         )
 
         {:noreply,
          socket
          |> put_flash(:info, "Confirmation instructions to email resent successfully.")
-         |> redirect(to: ~p"/")}
+         |> redirect(to: ~p"/auth/login")}
     end
   end
 

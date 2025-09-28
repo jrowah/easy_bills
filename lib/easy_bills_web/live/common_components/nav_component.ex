@@ -68,7 +68,7 @@ defmodule EasyBillsWeb.CommonComponents.NavComponent do
               </div>
             </.link>
             <.link
-              href={~p"/logout"}
+              href={~p"/auth/logout"}
               method="delete"
               class="text-[0.8125rem] leading-6 text-gray-500 font-semibold hover:text-zinc-700"
             >

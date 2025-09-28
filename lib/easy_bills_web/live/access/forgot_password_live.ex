@@ -1,4 +1,4 @@
-defmodule EasyBillsWeb.UserForgotPasswordLive do
+defmodule EasyBillsWeb.Access.ForgotPasswordLive do
   use EasyBillsWeb, :live_view
 
   alias EasyBills.Accounts

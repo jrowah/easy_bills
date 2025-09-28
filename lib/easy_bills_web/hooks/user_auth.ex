@@ -1,4 +1,4 @@
-defmodule EasyBillsWeb.UserAuth do
+defmodule EasyBillsWeb.Hooks.UserAuth do
   @moduledoc false
 
   use EasyBillsWeb, :verified_routes
@@ -163,21 +163,6 @@ defmodule EasyBillsWeb.UserAuth do
     {:cont, mount_current_user(socket, session)}
   end
 
-  def on_mount(:ensure_authenticated, _params, session, socket) do
-    socket = mount_current_user(socket, session)
-
-    if socket.assigns.current_user do
-      {:cont, socket}
-    else
-      socket =
-        socket
-        |> Phoenix.LiveView.put_flash(:error, "You must log in to access this page.")
-        |> Phoenix.LiveView.redirect(to: ~p"/login")
-
-      {:halt, socket}
-    end
-  end
-
   def on_mount(:redirect_if_user_is_authenticated, _params, session, socket) do
     socket = mount_current_user(socket, session)
 
@@ -239,7 +224,7 @@ defmodule EasyBillsWeb.UserAuth do
 
   defp maybe_store_return_to(conn), do: conn
 
-  defp signed_in_path_with_avatar(_conn), do: ~p"/invoices"
+  defp signed_in_path_with_avatar(_conn), do: ~p"/dashboard/invoices"
 
-  defp signed_in_path_without_avatar(_conn), do: ~p"/welcome"
+  defp signed_in_path_without_avatar(_conn), do: ~p"/dashboard"
 end

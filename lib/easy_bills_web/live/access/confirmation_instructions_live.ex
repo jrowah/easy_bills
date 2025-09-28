@@ -1,4 +1,4 @@
-defmodule EasyBillsWeb.UserConfirmationInstructionsLive do
+defmodule EasyBillsWeb.Access.ConfirmationInstructionsLive do
   use EasyBillsWeb, :live_view
 
   alias EasyBills.Accounts

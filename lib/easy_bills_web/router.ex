@@ -30,10 +30,23 @@ defmodule EasyBillsWeb.Router do
   #   pipe_through :api
   # end
 
-  ## Authentication routes
+  # Authentication routes
+  scope "/auth", EasyBillsWeb do
+    pipe_through :browser
 
-  scope "/", EasyBillsWeb do
-    pipe_through [:browser, :redirect_if_user_is_authenticated]
+    post "/login", SessionController, :create
+
+    delete "/logout", SessionController, :delete
+  end
+
+  scope "/access", EasyBillsWeb.Access do
+    pipe_through [:browser]
+
+    live_session :current_user,
+      on_mount: [{EasyBillsWeb.Hooks.UserAuth, :mount_current_user}] do
+      live "/confirm/:token", ConfirmationLive, :edit
+      live "/confirm", ConfirmationInstructionsLive, :new
+    end
 
     live_session :redirect_if_user_is_authenticated,
       on_mount: [{EasyBillsWeb.UserAuth, :redirect_if_user_is_authenticated}] do

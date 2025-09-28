@@ -4,7 +4,7 @@ defmodule EasyBillsWeb.OnboardingLive.Shared.NewPasswordInputComponent do
   use EasyBillsWeb, :html
 
   alias EasyBillsWeb.OnboardingLive.Shared.InputComponents
-  alias EasyBillsWeb.OnboardingLive.Shared.SharedComponents
+  alias EasyBillsWeb.Access.SharedComponents
 
   @type assigns :: map()
   @type output :: Phoenix.LiveView.Rendered.t()

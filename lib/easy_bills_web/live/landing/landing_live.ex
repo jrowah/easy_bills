@@ -7,7 +7,7 @@ defmodule EasyBillsWeb.Landing.LandingLive do
   alias EasyBillsWeb.CommonComponents.Icons
   alias EasyBillsWeb.OnboardingLive.Shared.RegularTemplate
 
-  @impl PhoenixLiveView
+  @impl true
   def mount(_params, _session, socket) do
     {:ok, socket}
   end
