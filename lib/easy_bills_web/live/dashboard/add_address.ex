@@ -13,8 +13,6 @@ defmodule EasyBillsWeb.Dashboard.AddAddress do
 
   @impl Phoenix.LiveView
   def update(assigns, socket) do
-    IO.inspect({assigns, socket.assigns}, label: "UPDATE ADDRESS")
-
     socket = assign(socket, assigns)
     user = socket.assigns.current_user
     changeset = User.registration_changeset(user, %{})

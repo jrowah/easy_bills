@@ -19,8 +19,6 @@ defmodule EasyBillsWeb.SessionController do
   end
 
   defp create(conn, %{"user" => user_params}, info) do
-    IO.inspect(user_params, label: "User Params")
-
     case Accounts.get_user_by_email_and_password(user_params["email"], user_params["password"]) do
       nil ->
         conn
@@ -29,13 +27,10 @@ defmodule EasyBillsWeb.SessionController do
         |> redirect(to: ~p"/access/login")
 
       user ->
-        IO.inspect(user, label: "Found User")
-
         cond do
           user.confirmed_at ->
             conn
             |> put_flash(:info, info)
-            |> IO.inspect(label: "Logging in user")
             |> UserAuth.log_in_user(user, user_params)
 
           DateTime.diff(DateTime.utc_now(), DateTime.from_naive!(user.inserted_at, "Etc/UTC")) <=

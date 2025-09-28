@@ -34,9 +34,6 @@ defmodule EasyBillsWeb.Dashboard.Settings.IndexLive do
     address_changeset =
       Accounts.change_user_address(user)
 
-    # notifications_changeset =
-    # Accounts.change_user_notifications(user) |> IO.inspect(label: "notifications_changeset")
-
     socket =
       socket
       |> assign(:current_password, nil)
