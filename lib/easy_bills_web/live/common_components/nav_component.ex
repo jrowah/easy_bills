@@ -60,6 +60,22 @@ defmodule EasyBillsWeb.CommonComponents.NavComponent do
               </div>
             </.link>
             <.link
+              navigate={~p"/dashboard/invoices"}
+              class="text-[0.8125rem] leading-6 text-gray-500 font-semibold hover:text-zinc-700"
+            >
+              <div class="flex items-center space-x-3">
+                <.icon name="hero-document-text-solid" class="text-[#7C5DFA]" /> <span>Invoices</span>
+              </div>
+            </.link>
+            <.link
+              navigate={~p"/dashboard/expenses"}
+              class="text-[0.8125rem] leading-6 text-gray-500 font-semibold hover:text-zinc-700"
+            >
+              <div class="flex items-center space-x-3">
+                <.icon name="hero-banknotes-solid" class="text-[#7C5DFA]" /> <span>Expenses</span>
+              </div>
+            </.link>
+            <.link
               navigate={~p"/dashboard/settings"}
               class="text-[0.8125rem] leading-6 text-gray-500 font-semibold hover:text-zinc-700"
             >
