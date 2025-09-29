@@ -18,10 +18,11 @@ defmodule EasyBillsWeb.InvoiceLive.FormComponent do
         id="invoice-form"
         phx-target={@myself}
         phx-change="validate"
-        phx-submit="save"
       >
-        <.input field={@form[:client_name]} type="text" label="Client name" />
-        <.input field={@form[:client_email]} type="email" label="Client email" />
+        <div class="grid grid-cols-2 gap-4">
+          <.input field={@form[:client_name]} type="text" label="Client name" />
+          <.input field={@form[:client_email]} type="email" label="Client email" />
+        </div>
         <.input field={@form[:client_street_address]} type="text" label="Client address" />
         <div class="grid grid-cols-3 gap-4">
           <.input field={@form[:client_city]} type="text" label="City" />
@@ -69,14 +70,17 @@ defmodule EasyBillsWeb.InvoiceLive.FormComponent do
         >
           <span>&plus; Add New Item</span>
         </div>
-        <:actions>
-          <.button phx-disable-with="Saving...">Save and Send</.button>
-        </:actions>
-        <input
-          class="cursor-pointer bg-gray-200 py-3 px-4 text-center rounded-full"
-          type="reset"
-          value="Discard"
-        />
+        <div class="flex justify-between">
+          <input
+            class="cursor-pointer bg-gray-200 py-3 px-4 text-center rounded-full"
+            type="reset"
+            value="Discard"
+          />
+          <div class="flex items-center justify-end">
+            <.button phx-click="save_draft" phx-target={@myself} phx-disable-with="Saving..." class="py-3 px-4 mr-2" type="button">Save as Draft</.button>
+            <.button phx-click="save_and_send" phx-target={@myself} phx-disable-with="Saving..." class="py-3 px-4" type="button">Save and Send</.button>
+          </div>
+        </div>
       </.simple_form>
     </div>
     """
@@ -102,18 +106,29 @@ defmodule EasyBillsWeb.InvoiceLive.FormComponent do
     {:noreply, assign_form(socket, changeset)}
   end
 
-  def handle_event("save", %{"invoice" => invoice_params}, socket) do
-    save_invoice(socket, socket.assigns.action, invoice_params)
+  def handle_event("save_draft", _params, socket) do
+    # Get the current form data
+    form_data = socket.assigns.form.params |> IO.inspect()
+    save_invoice_as_draft(socket, socket.assigns.action, form_data)
   end
 
-  defp save_invoice(socket, :edit, invoice_params) do
-    case Billing.update_invoice(socket.assigns.invoice, invoice_params) do
+  def handle_event("save_and_send", _params, socket) do
+    # Get the current form data
+    form_data = socket.assigns.form.params |> IO.inspect()
+    save_and_send_invoice(socket, socket.assigns.action, form_data)
+  end
+
+  defp save_invoice_as_draft(socket, :edit, invoice_params) do
+    # Add draft status to params
+    draft_params = Map.put(invoice_params, "status", "draft")
+
+    case Billing.update_invoice(socket.assigns.invoice, draft_params) do
       {:ok, invoice} ->
         notify_parent({:saved, invoice})
 
         {:noreply,
          socket
-         |> put_flash(:info, "Invoice updated successfully")
+         |> put_flash(:info, "Invoice saved as draft")
          |> push_patch(to: socket.assigns.patch)}
 
       {:error, %Ecto.Changeset{} = changeset} ->
@@ -121,14 +136,55 @@ defmodule EasyBillsWeb.InvoiceLive.FormComponent do
     end
   end
 
-  defp save_invoice(socket, :new, invoice_params) do
-    case Billing.create_invoice(invoice_params) do
+  defp save_invoice_as_draft(socket, :new, invoice_params) do
+    # Add draft status to params
+    draft_params = Map.put(invoice_params, "status", "draft")
+
+    case Billing.create_invoice(draft_params) do
       {:ok, invoice} ->
         notify_parent({:saved, invoice})
 
         {:noreply,
          socket
-         |> put_flash(:info, "Invoice created successfully")
+         |> put_flash(:info, "Invoice saved as draft")
+         |> push_patch(to: socket.assigns.patch)}
+
+      {:error, %Ecto.Changeset{} = changeset} ->
+        {:noreply, assign_form(socket, changeset)}
+    end
+  end
+
+  defp save_and_send_invoice(socket, :edit, invoice_params) do
+    # Add sent status to params
+    sent_params = Map.put(invoice_params, "status", "sent")
+
+    case Billing.update_invoice(socket.assigns.invoice, sent_params) do
+      {:ok, invoice} ->
+        # Here you could add logic to actually send the invoice (email, etc.)
+        notify_parent({:saved, invoice})
+
+        {:noreply,
+         socket
+         |> put_flash(:info, "Invoice saved and sent successfully")
+         |> push_patch(to: socket.assigns.patch)}
+
+      {:error, %Ecto.Changeset{} = changeset} ->
+        {:noreply, assign_form(socket, changeset)}
+    end
+  end
+
+  defp save_and_send_invoice(socket, :new, invoice_params) do
+    # Add sent status to params
+    sent_params = Map.put(invoice_params, "status", "sent")
+
+    case Billing.create_invoice(sent_params) do
+      {:ok, invoice} ->
+        # Here you could add logic to actually send the invoice (email, etc.)
+        notify_parent({:saved, invoice})
+
+        {:noreply,
+         socket
+         |> put_flash(:info, "Invoice created and sent successfully")
          |> push_patch(to: socket.assigns.patch)}
 
       {:error, %Ecto.Changeset{} = changeset} ->

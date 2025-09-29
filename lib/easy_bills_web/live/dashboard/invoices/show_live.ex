@@ -1,4 +1,4 @@
-defmodule EasyBillsWeb.InvoiceLive.Show do
+defmodule EasyBillsWeb.Dashboard.Invoices.ShowLive do
   use EasyBillsWeb, :live_view
 
   alias EasyBills.Accounts

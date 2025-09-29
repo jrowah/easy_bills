@@ -17,7 +17,6 @@ defmodule EasyBillsWeb.Dashboard.Components.InvoiceComponent do
     <ul
       id={"invoice-#{@invoice.id}"}
       class="flex mx-auto justify-around space-y-2 items-center w-1/2 rounded-lg bg-white shadow-lg py-2"
-      phx-hook="Invoice"
       data-invoice-id={@invoice.id}
     >
       <li class="text-lg font-bold mt-2">
@@ -36,7 +35,7 @@ defmodule EasyBillsWeb.Dashboard.Components.InvoiceComponent do
         <%!-- <%= @invoice.status %> --%>
       </li>
       <li class="text-sm font-medium mt-2 cursor-pointer">
-        <.link navigate={~p"/invoices/#{@invoice}"}>
+        <.link navigate={~p"/dashboard/invoices/#{@invoice}"}>
           <.icon name="hero-chevron-right" class="h-3 w-3" />
         </.link>
       </li>

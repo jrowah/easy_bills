@@ -2,18 +2,49 @@
   <NavComponent.navbar current_user={@current_user} />
   <main class=" p-5 h-[100vh] text-center tracking-tight">
     <div class="flex w-1/2 justify-between mx-auto mt-6">
-      <div>
+      <div class="text-left">
         <h2 class="font-bold text-lg">Invoices</h2>
         <h6 class="text-xs font-gray-300">No invoices</h6>
+        <h6 class="text-xs text-gray-400">
+          There are a total of <%= length(@streams.invoices.inserts) %> invoices
+        </h6>
       </div>
       <div class="flex flex-row items-center font-bold">
-        <p class="mr-1">Filter by status</p>
-        <.icon name="hero-chevron-down" />
-        <button class="btn bg-purple-500 rounded-full w-36 h-12 text-white flex items-center justify-between px-2 ml-6">
-          <Icons.white_background_plus_icon /> New Invoice
-        </button>
+        <span class="flex items-center cursor-pointer">
+          <p class="mr-1">Filter by status</p>
+          <.icon name="hero-chevron-down" class="text-purple-700 font-bold h-4 w-4" />
+        </span>
+        <.link patch={~p"/dashboard/invoices/new"}>
+          <button class="btn bg-purple-500 rounded-full w-36 h-12 text-white flex items-center justify-between px-2 ml-6">
+            <Icons.white_background_plus_icon /> New Invoice
+          </button>
+        </.link>
       </div>
     </div>
-    <EasyBillsWeb.Dashboard.Components.EmptyInvoice.empty_inbox />
+
+    <div id="invoices" class="invoices space-y-2" phx-update="stream">
+      <div id="invoices-empty-state" class="hidden only:block">
+        <EasyBillsWeb.Dashboard.Components.EmptyInvoice.empty_inbox />
+      </div>
+      <div :for={{dom_id, invoice} <- @streams.invoices} id={dom_id} class="invoice">
+        <.live_component module={InvoiceComponent} invoice={invoice} id={"invoice-#{invoice.id}"} />
+      </div>
+    </div>
   </main>
 </div>
+
+<.modal
+  :if={@live_action in [:new, :edit]}
+  id="invoice-modal"
+  show
+  on_cancel={JS.patch(~p"/dashboard/invoices")}
+>
+  <.live_component
+    module={EasyBillsWeb.InvoiceLive.FormComponent}
+    id={@invoice.id || :new}
+    title={@page_title}
+    action={@live_action}
+    invoice={@invoice}
+    patch={~p"/dashboard/invoices"}
+  />
+</.modal>

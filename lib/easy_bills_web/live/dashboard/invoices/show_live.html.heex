@@ -1,9 +1,9 @@
 <NavComponent.navbar current_user={@current_user} />
 <div class="max-w-2xl pt-4 mx-auto space-y-6">
-  <.back navigate={~p"/invoices"}>Go Back</.back>
+  <.back navigate={~p"/dashboard/invoices"}>Go Back</.back>
   <.header class="p-6 bg-white text-xs">
     <:actions>
-      <.link patch={~p"/invoices/#{@invoice}/show/edit"} phx-click={JS.push_focus()}>
+      <.link patch={~p"/dashboard/invoices/#{@invoice}/show/edit"} phx-click={JS.push_focus()}>
         <button class="bg-gray-100 p-4 px-6 text-gray-400 rounded-3xl font-bold mr-4 min-w-12">
           Edit
         </button>
@@ -125,7 +125,7 @@
     :if={@live_action == :edit}
     id="invoice-modal"
     show
-    on_cancel={JS.patch(~p"/invoices/#{@invoice}")}
+    on_cancel={JS.patch(~p"/dashboard/invoices/#{@invoice}")}
   >
     <.live_component
       module={EasyBillsWeb.InvoiceLive.FormComponent}
@@ -133,7 +133,7 @@
       title={@page_title}
       action={@live_action}
       invoice={@invoice}
-      patch={~p"/invoices/#{@invoice}"}
+      patch={~p"/dashboard/invoices/#{@invoice}"}
     />
   </.modal>
 </div>
