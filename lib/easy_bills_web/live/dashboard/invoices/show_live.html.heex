@@ -99,23 +99,17 @@
         </tr>
       </thead>
       <tbody class="text-sm">
-        <tr>
-          <td><%= @invoice.description %></td>
-          <td>1</td>
-          <td>£156.00</td>
-          <td>$156.00</td>
-        </tr>
-        <tr>
-          <td><%= @invoice.description %></td>
-          <td>2</td>
-          <td>£200.00</td>
-          <td>£400.00</td>
+        <tr :for={item <- @invoice.items}>
+          <td><%= item.item_name %></td>
+          <td><%= item.quantity %></td>
+          <td><%= item.unit_price %></td>
+          <td><%= item.unit_price * item.quantity %></td>
         </tr>
       </tbody>
       <tfoot>
         <tr>
           <td colspan="3">Amount Due</td>
-          <%!-- <td>£<%= @invoice.amount %></td> --%>
+          <td>£<%= amount_due(@invoice) %></td>
         </tr>
       </tfoot>
     </table>

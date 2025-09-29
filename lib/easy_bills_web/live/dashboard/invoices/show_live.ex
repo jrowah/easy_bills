@@ -64,4 +64,16 @@ defmodule EasyBillsWeb.Dashboard.Invoices.ShowLive do
 
   #   {:noreply, socket}
   # end
+
+  defp amount_due(invoice) do
+    case invoice.items do
+      [] ->
+        0.00
+
+      items ->
+        items
+        |> Enum.map(fn item -> item.quantity * item.unit_price end)
+        |> Enum.reduce(fn item_total, acc -> item_total + acc end)
+    end
+  end
 end
