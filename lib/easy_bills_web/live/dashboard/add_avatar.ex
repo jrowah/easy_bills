@@ -9,12 +9,12 @@ defmodule EasyBillsWeb.Dashboard.AddAvatar do
 
   import Phoenix.HTML.Form
 
-  @impl Phoenix.LiveView
-  def mount(_params, _session, socket) do
+  @impl Phoenix.LiveComponent
+  def mount(socket) do
     {:ok, socket}
   end
 
-  @impl Phoenix.LiveView
+  @impl Phoenix.LiveComponent
   def update(assigns, socket) do
     socket = assign(socket, assigns)
     user = socket.assigns.current_user
@@ -32,7 +32,7 @@ defmodule EasyBillsWeb.Dashboard.AddAvatar do
      )}
   end
 
-  @impl Phoenix.LiveView
+  @impl Phoenix.LiveComponent
   def render(assigns) do
     ~H"""
     <div>
@@ -101,7 +101,7 @@ defmodule EasyBillsWeb.Dashboard.AddAvatar do
     """
   end
 
-  @impl Phoenix.LiveView
+  @impl Phoenix.LiveComponent
   def handle_event("validate", _params, socket) do
     {:noreply, socket}
   end
@@ -110,7 +110,7 @@ defmodule EasyBillsWeb.Dashboard.AddAvatar do
     {:noreply, socket |> assign(:avatar_selected?, true)}
   end
 
-  @impl Phoenix.LiveView
+  @impl Phoenix.LiveComponent
   def handle_event("save", _params, socket) do
     uploaded_files =
       consume_uploaded_entries(socket, :avatar_url, fn %{path: path}, _entry ->

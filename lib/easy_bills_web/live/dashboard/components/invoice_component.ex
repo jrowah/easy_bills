@@ -16,25 +16,27 @@ defmodule EasyBillsWeb.Dashboard.Components.InvoiceComponent do
     ~H"""
     <ul
       id={"invoice-#{@invoice.id}"}
-      class="flex mx-auto justify-around space-y-2 items-center w-1/2 rounded-lg bg-white shadow-lg py-2"
+      class="flex mx-auto justify-around space-y-2 text-gray-400 text-sm items-start w-1/2 rounded-lg bg-white shadow-lg py-2"
       data-invoice-id={@invoice.id}
     >
-      <li class="text-lg font-bold mt-2">
+      <li class="font-bold my-auto text-black">
         <span class="text-gray-400">#</span><%= transform_id(@invoice.id) %>
       </li>
-      <li class="text-sm font-medium mt-2 text-gray-400">
-        <span>Due on </span><%= @invoice.due_at %>
+      <li class="font-medium my-auto text-gray-400">
+        <span>Due </span><%= @invoice.due_at %>
       </li>
-      <li class="text-lg font-bold mt-2 text-gray-400">
+      <li class="font-bold my-auto text-left text-gray-400">
         <%= @invoice.client_name %>
       </li>
-      <li class="text-lg font-bold mt-2">
-        <%!-- <span>£ </span><%= @invoice.amount %> --%>
+      <li class="font-bold text-black">
+        <span><%= amount_due(@invoice) %></span>
       </li>
-      <li class="text-sm font-medium mt-2">
-        <%!-- <%= @invoice.status %> --%>
+      <li class="font-bold">
+        <span class="p-2 bg-gray-200 text-black">
+          <span class="h-2 w-2 rounded-full inline-block bg-gray-400"></span> Pending
+        </span>
       </li>
-      <li class="text-sm font-medium mt-2 cursor-pointer">
+      <li class="font-medium mt-2 cursor-pointer">
         <.link navigate={~p"/dashboard/invoices/#{@invoice}"}>
           <.icon name="hero-chevron-right" class="h-3 w-3" />
         </.link>
@@ -47,5 +49,17 @@ defmodule EasyBillsWeb.Dashboard.Components.InvoiceComponent do
     id
     |> String.upcase()
     |> String.slice(0, 6)
+  end
+
+  defp amount_due(invoice) do
+    case invoice.items do
+      [] ->
+        0.00
+
+      items ->
+        items
+        |> Enum.map(fn item -> item.quantity * item.unit_price end)
+        |> Enum.reduce(fn item_total, acc -> item_total + acc end)
+    end
   end
 end

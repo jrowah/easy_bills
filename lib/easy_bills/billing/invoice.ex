@@ -1,4 +1,9 @@
 defmodule EasyBills.Billing.Invoice do
+  @moduledoc """
+  The Invoice schema represents an invoice issued by a user to a client.
+  It includes details such as due date, client information, line items, and terms.
+  """
+
   use Ecto.Schema
   import Ecto.Changeset
 

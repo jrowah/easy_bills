@@ -11,7 +11,7 @@ defmodule EasyBillsWeb.Dashboard.Hooks.Session do
     socket = mount_current_user(socket, session)
 
     if socket.assigns.current_user do
-      {:cont, socket} = socket |> setup(params, session) |> complete()
+      {:cont, _socket} = socket |> setup(params, session) |> complete()
     else
       socket =
         socket
@@ -22,7 +22,7 @@ defmodule EasyBillsWeb.Dashboard.Hooks.Session do
     end
   end
 
-  defp setup(socket, session, params) do
+  defp setup(socket, session, _params) do
     socket
     |> assign(:scope, :dashboard)
     |> assign(:current_path, session["current_path"] || "/dashboard")

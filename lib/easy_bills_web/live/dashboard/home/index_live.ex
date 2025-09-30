@@ -5,8 +5,6 @@ defmodule EasyBillsWeb.Dashboard.Home.IndexLive do
   use EasyBillsWeb, :live_view
 
   alias EasyBills.Accounts
-  alias EasyBillsWeb.CommonComponents.Icons
-  alias EasyBillsWeb.CommonComponents.NavComponent
 
   @impl Phoenix.LiveView
   def mount(_params, _session, socket) do
@@ -46,6 +44,7 @@ defmodule EasyBillsWeb.Dashboard.Home.IndexLive do
     end
   end
 
+  @impl Phoenix.LiveView
   def handle_info({:added_avatar, _params}, socket) do
     # update the list of cards in the socket
     {:noreply,

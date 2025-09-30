@@ -110,24 +110,6 @@ defmodule EasyBillsWeb.CoreComponents do
 
   """
 
-  @doc """
-  Renders a profile modal.
-
-  ## Examples
-
-      <.profile_modal id="confirm-modal">
-        This is a modal.
-      </.profile_modal>
-
-  JS commands may be passed to the `:on_cancel` to configure
-  the closing/cancel event, for example:
-
-      <.modal id="confirm" on_cancel={JS.navigate(~p"/posts")}>
-        This is another modal.
-      </.modal>
-
-  """
-
   attr :id, :string, required: true
   attr :show, :boolean, default: false
   attr :on_cancel, JS, default: %JS{}

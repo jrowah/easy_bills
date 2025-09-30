@@ -1,4 +1,5 @@
 defmodule EasyBillsWeb.Dashboard.AddAddress do
+  @moduledoc false
   use EasyBillsWeb, :live_component
 
   alias EasyBills.Accounts.User
@@ -6,12 +7,12 @@ defmodule EasyBillsWeb.Dashboard.AddAddress do
   alias EasyBillsWeb.CoreComponents
   alias EasyBillsWeb.OnboardingLive.Shared.RegularTemplate
 
-  @impl Phoenix.LiveView
-  def mount(_params, _session, socket) do
+  @impl Phoenix.LiveComponent
+  def mount(socket) do
     {:ok, socket}
   end
 
-  @impl Phoenix.LiveView
+  @impl Phoenix.LiveComponent
   def update(assigns, socket) do
     socket = assign(socket, assigns)
     user = socket.assigns.current_user
@@ -25,7 +26,7 @@ defmodule EasyBillsWeb.Dashboard.AddAddress do
     {:ok, socket}
   end
 
-  @impl Phoenix.LiveView
+  @impl Phoenix.LiveComponent
   def render(assigns) do
     ~H"""
     <div>

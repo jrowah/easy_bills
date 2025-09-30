@@ -54,13 +54,18 @@ defmodule EasyBillsWeb.InvoiceLive.FormComponent do
                     <td><.input field={item_form[:quantity]} type="number" step="1" /></td>
                     <td><.input field={item_form[:unit_price]} type="number" step="0.01" /></td>
                     <td class="text-center">
-                      <%
-                      total(item_form)
-                      %>
-                      £<%= :erlang.float_to_binary(total(item_form) * 1.0, [decimals: 2]) %>
+                      <% total(item_form) %> £<%= :erlang.float_to_binary(total(item_form) * 1.0,
+                        decimals: 2
+                      ) %>
                     </td>
                     <td>
-                      <button type="button" phx-click="remove_item" phx-target={@myself} phx-value-index={item_form.index} class="cursor-pointer text-gray-500">
+                      <button
+                        type="button"
+                        phx-click="remove_item"
+                        phx-target={@myself}
+                        phx-value-index={item_form.index}
+                        class="cursor-pointer text-gray-500"
+                      >
                         <.icon name="hero-trash-solid" />
                       </button>
                     </td>
@@ -84,8 +89,24 @@ defmodule EasyBillsWeb.InvoiceLive.FormComponent do
             value="Discard"
           />
           <div class="flex items-center justify-end">
-            <.button phx-click="save_draft" phx-target={@myself} phx-disable-with="Saving..." class="py-3 px-4 mr-2" type="button">Save as Draft</.button>
-            <.button phx-click="save_and_send" phx-target={@myself} phx-disable-with="Saving..." class="py-3 px-4" type="button">Save and Send</.button>
+            <.button
+              phx-click="save_draft"
+              phx-target={@myself}
+              phx-disable-with="Saving..."
+              class="py-3 px-4 mr-2"
+              type="button"
+            >
+              Save as Draft
+            </.button>
+            <.button
+              phx-click="save_and_send"
+              phx-target={@myself}
+              phx-disable-with="Saving..."
+              class="py-3 px-4"
+              type="button"
+            >
+              Save and Send
+            </.button>
           </div>
         </div>
       </.simple_form>

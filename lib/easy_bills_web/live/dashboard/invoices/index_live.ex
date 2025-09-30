@@ -9,9 +9,8 @@ defmodule EasyBillsWeb.Dashboard.Invoices.IndexLive do
   alias EasyBills.Billing
   alias EasyBills.Billing.Invoice
   alias EasyBillsWeb.Dashboard.Components.InvoiceComponent
-  alias EasyBillsWeb.InvoiceComponents.EmptyInvoice
 
-  @impl true
+  @impl Phoenix.LiveView
   def mount(_params, _session, socket) do
     {:ok,
      socket
@@ -24,7 +23,14 @@ defmodule EasyBillsWeb.Dashboard.Invoices.IndexLive do
     {:noreply, push_event(socket, "toggle_dark_mode", %{})}
   end
 
-  @impl true
+  def handle_event("delete", %{"id" => id}, socket) do
+    invoice = Billing.get_invoice!(id)
+    {:ok, _} = Billing.delete_invoice(invoice)
+
+    {:noreply, stream_delete(socket, :invoices, invoice)}
+  end
+
+  @impl Phoenix.LiveView
   def handle_params(params, _url, socket) do
     {:noreply, apply_action(socket, socket.assigns.live_action, params)}
   end
@@ -47,16 +53,8 @@ defmodule EasyBillsWeb.Dashboard.Invoices.IndexLive do
     |> assign(:invoice, nil)
   end
 
-  @impl true
+  @impl Phoenix.LiveView
   def handle_info({EasyBillsWeb.InvoiceLive.FormComponent, {:saved, invoice}}, socket) do
     {:noreply, stream_insert(socket, :invoices, invoice)}
-  end
-
-  @impl true
-  def handle_event("delete", %{"id" => id}, socket) do
-    invoice = Billing.get_invoice!(id)
-    {:ok, _} = Billing.delete_invoice(invoice)
-
-    {:noreply, stream_delete(socket, :invoices, invoice)}
   end
 end
