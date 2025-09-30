@@ -186,8 +186,8 @@ defmodule EasyBillsWeb.InvoiceLive.FormComponent do
   end
 
   defp save_invoice_as_draft(socket, :edit, invoice_params) do
-    # Add draft status to params
-    draft_params = Map.put(invoice_params, "status", "draft")
+    # Add draft status to params (as atom)
+    draft_params = Map.put(invoice_params, "status", :draft)
 
     case Billing.update_invoice(socket.assigns.invoice, draft_params) do
       {:ok, invoice} ->
@@ -222,8 +222,8 @@ defmodule EasyBillsWeb.InvoiceLive.FormComponent do
   end
 
   defp save_and_send_invoice(socket, :edit, invoice_params) do
-    # Add sent status to params
-    sent_params = Map.put(invoice_params, "status", "sent")
+    # Add sent status to params (as atom)
+    sent_params = Map.put(invoice_params, "status", :pending)
 
     case Billing.update_invoice(socket.assigns.invoice, sent_params) do
       {:ok, invoice} ->
@@ -241,8 +241,8 @@ defmodule EasyBillsWeb.InvoiceLive.FormComponent do
   end
 
   defp save_and_send_invoice(socket, :new, invoice_params) do
-    # Add sent status to params
-    sent_params = Map.put(invoice_params, "status", "sent")
+    # Add sent status to params (as atom)
+    sent_params = Map.put(invoice_params, "status", :pending)
 
     case Billing.create_invoice(sent_params) do
       {:ok, invoice} ->

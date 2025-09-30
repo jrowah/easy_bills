@@ -21,6 +21,7 @@ defmodule EasyBills.Billing.Invoice do
     field :client_postal_code, :string
     field :client_country, :string
     field :terms, :string
+    field :status, Ecto.Enum, values: [:draft, :paid, :pending, :cancelled], default: :draft
 
     belongs_to :user, User
 
@@ -45,7 +46,8 @@ defmodule EasyBills.Billing.Invoice do
       :client_city,
       :client_postal_code,
       :client_country,
-      :terms
+      :terms,
+      :status
     ])
     |> validate_required([
       :due_at,
@@ -67,5 +69,36 @@ defmodule EasyBills.Billing.Invoice do
     |> validate_required([:item_name, :quantity, :unit_price])
     |> validate_number(:quantity, greater_than: 0)
     |> validate_number(:unit_price, greater_than: 0.0)
+  end
+
+  @doc """
+  Returns all possible status values as atoms.
+  """
+  def status_options, do: [:draft, :paid, :pending, :cancelled]
+
+  @doc """
+  Converts status atom to human readable string.
+  """
+  def status_display(status) do
+    case status do
+      :draft -> "Draft"
+      :pending -> "Pending"
+      :paid -> "Paid"
+      :cancelled -> "Cancelled"
+    end
+  end
+
+  @doc """
+  Returns true if the invoice can be edited.
+  """
+  def editable?(%__MODULE__{status: status}) do
+    status in [:draft]
+  end
+
+  @doc """
+  Returns true if the invoice can be sent.
+  """
+  def sendable?(%__MODULE__{status: status}) do
+    status in [:draft]
   end
 end

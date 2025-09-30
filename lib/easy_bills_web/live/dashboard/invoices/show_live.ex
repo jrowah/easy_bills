@@ -39,12 +39,12 @@ defmodule EasyBillsWeb.Dashboard.Invoices.ShowLive do
     {:noreply,
      socket
      |> stream_delete(:invoices, invoice)
-     |> push_patch(to: ~p"/invoices")}
+     |> push_patch(to: ~p"/dashboard/invoices")}
   end
 
   @impl true
   def handle_event("edit", %{"id" => id}, socket) do
-    {:noreply, push_navigate(socket, to: ~p"/invoices/#{id}/edit")}
+    {:noreply, push_navigate(socket, to: ~p"/dashboard/invoices/#{id}/edit")}
   end
 
   # @impl true
