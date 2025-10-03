@@ -48,7 +48,7 @@ defmodule EasyBillsWeb.Dashboard.AddAvatar do
 
           <div class="mt-16">
             <h4 class="font-bold mt-6">Add an avatar</h4>
-            <div class="w-32 h-32 rounded-full border-2 border-dashed border-gray-400">
+            <div class={["w-32 h-32 rounded-full", not @avatar_selected? && "border-2 border-dashed border-gray-400"]}>
               <%= for entry <- @uploads.avatar_url.entries do %>
                 <figure>
                   <.live_img_preview entry={entry} class="rounded-full w-32 h-32" />
