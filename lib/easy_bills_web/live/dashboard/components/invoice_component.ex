@@ -32,8 +32,22 @@ defmodule EasyBillsWeb.Dashboard.Components.InvoiceComponent do
         <span>£ <%= amount_due(@invoice) %></span>
       </li>
       <li class="font-bold">
-        <span class={["p-2 bg-gray-200", @invoice.status == :paid && "text-green-400", @invoice.status == :draft && "text-black", @invoice.status == :pending && "text-orange-400", @invoice.status == :cancelled && "text-red-400", "rounded-lg"]}>
-          <span class={["h-2 w-2 rounded-full inline-block", @invoice.status == :paid && "bg-green-400", @invoice.status == :pending && "bg-orange-400", @invoice.status == :draft && "bg-black", @invoice.status == :cancelled && "bg-red-400"]}></span> <%= @invoice.status %>
+        <span class={[
+          "p-2 bg-gray-200",
+          @invoice.status == :paid && "text-green-400",
+          @invoice.status == :draft && "text-black",
+          @invoice.status == :pending && "text-orange-400",
+          @invoice.status == :cancelled && "text-red-400",
+          "rounded-lg"
+        ]}>
+          <span class={[
+            "h-2 w-2 rounded-full inline-block",
+            @invoice.status == :paid && "bg-green-400",
+            @invoice.status == :pending && "bg-orange-400",
+            @invoice.status == :draft && "bg-black",
+            @invoice.status == :cancelled && "bg-red-400"
+          ]}>
+          </span> <%= @invoice.status %>
         </span>
       </li>
       <li class="font-medium mt-2 cursor-pointer">
