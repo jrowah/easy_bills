@@ -33,7 +33,7 @@ defmodule EasyBillsWeb.Dashboard.AddAddress do
       <RegularTemplate.regular>
         <div class="md:w-1/3 mx-auto mt-16">
           <.link
-            href={~p"/welcome"}
+            href={~p"/dashboard"}
             id="back-icon"
             class="flex text-purple-600 absolute mt-[-6%] lg:mt-[-2%] lg:ml-[-8%]"
           >
@@ -51,8 +51,6 @@ defmodule EasyBillsWeb.Dashboard.AddAddress do
             phx-change="validate"
             phx-submit="update_address"
             phx-trigger-action={@trigger_submit}
-            action={~p"/address"}
-            method="post"
           >
             <.error :if={@check_errors}>
               Oops, something went wrong! Please check the errors below.

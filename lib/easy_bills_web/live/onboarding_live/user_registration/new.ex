@@ -40,9 +40,8 @@ defmodule EasyBillsWeb.OnboardingLive.UserRegistration.New do
             phx-submit="save"
             phx-change="validate"
             phx-trigger-action={@trigger_submit}
-            action={~p"/login?_action=registered"}
+            action={~p"/auth/login?_action=registered"}
             method="post"
-            class="mt-[-20px]"
           >
             <.error :if={@check_errors}>
               Oops, something went wrong! Please check the errors below.

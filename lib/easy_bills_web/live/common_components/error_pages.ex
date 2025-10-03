@@ -24,11 +24,11 @@ defmodule EasyBillsWeb.CommonComponents.ErrorPages do
             </p>
             <p>
               Back to
-              <.link navigate={~p"/register"} class="font-semibold hover:underline">
+              <.link navigate={~p"/access/register"} class="font-semibold hover:underline">
                 Signup
               </.link>
               or
-              <.link navigate={~p"/login"} class="font-semibold hover:underline">
+              <.link navigate={~p"/access/login"} class="font-semibold hover:underline">
                 Login
               </.link>
             </p>

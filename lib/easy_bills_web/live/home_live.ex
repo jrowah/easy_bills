@@ -33,7 +33,7 @@ defmodule EasyBillsWeb.HomeLive do
             <div class="relative flex items-center space-x-4 justify-center">
               <Icons.email_icon />
               <.link
-                href={~p"/login"}
+                href={~p"/access/login"}
                 class="text-md leading-6 text-gray-700 font-semibold hover:text-zinc-700 tracking-wide"
               >
                 Continue with email

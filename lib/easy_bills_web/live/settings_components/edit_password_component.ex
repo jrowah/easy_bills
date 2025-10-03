@@ -35,7 +35,7 @@ defmodule EasyBillsWeb.SettingsComponents.EditPasswordComponent do
         <.simple_form
           for={@password_form}
           id="password_form"
-          action={~p"/login?_action=password_updated"}
+          action={~p"/auth/login?_action=password_updated"}
           method="post"
           phx-change="validate_password"
           phx-submit="update_password"
