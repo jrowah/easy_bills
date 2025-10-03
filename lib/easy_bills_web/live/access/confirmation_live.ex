@@ -1,4 +1,4 @@
-defmodule EasyBillsWeb.UserConfirmationLive do
+defmodule EasyBillsWeb.Access.ConfirmationLive do
   use EasyBillsWeb, :live_view
 
   alias EasyBills.Accounts
@@ -65,7 +65,7 @@ defmodule EasyBillsWeb.UserConfirmationLive do
         {:noreply,
          socket
          |> put_flash(:info, "User confirmed successfully.")
-         |> redirect(to: ~p"/")}
+         |> redirect(to: ~p"/access/login")}
 
       :error ->
         # If there is a current user and the account was already confirmed,

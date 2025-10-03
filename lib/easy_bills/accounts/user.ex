@@ -173,4 +173,9 @@ defmodule EasyBills.Accounts.User do
       add_error(changeset, :current_password, "is not valid")
     end
   end
+
+  def notifications_changeset(notification, _attrs) do
+    notification
+    # |> cast(attrs, [:newsletter, :signin, :payment])
+  end
 end

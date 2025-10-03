@@ -3,3 +3,21 @@
 @import 'tailwindcss/utilities';
 
 /* This file is for your main application CSS */
+.totals {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 25px 0;
+  font-size: 18px;
+  text-align: left;
+  background-color: #f2f2f2;
+}
+th,
+td {
+  padding: 12px;
+}
+
+tfoot {
+  color: white;
+  font-weight: bold;
+  background-color: black;
+}

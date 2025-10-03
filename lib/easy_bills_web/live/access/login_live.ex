@@ -1,4 +1,4 @@
-defmodule EasyBillsWeb.UserLoginLive do
+defmodule EasyBillsWeb.Access.LoginLive do
   @moduledoc false
 
   use EasyBillsWeb, :live_view
@@ -21,7 +21,7 @@ defmodule EasyBillsWeb.UserLoginLive do
           Sign in to EasyBills
         </.header>
 
-        <.simple_form for={@form} id="login_form" action={~p"/login"} phx-update="ignore">
+        <.simple_form for={@form} id="login_form" action={~p"/auth/login"} phx-update="ignore">
           <.input
             field={@form[:email]}
             type="email"
@@ -48,7 +48,7 @@ defmodule EasyBillsWeb.UserLoginLive do
 
           <:actions>
             <.input field={@form[:remember_me]} type="checkbox" label="Remember me" />
-            <.link href={~p"/reset_password"} class="text-sm font-semibold text-purple-500">
+            <.link href={~p"/access/reset_password"} class="text-sm font-semibold text-purple-500">
               Forgot password?
             </.link>
           </:actions>
@@ -61,7 +61,7 @@ defmodule EasyBillsWeb.UserLoginLive do
 
         <p class="mt-4">
           Don't have an account?
-          <.link navigate={~p"/register"} class="font-semibold text-purple-400 hover:underline">
+          <.link navigate={~p"/access/register"} class="font-semibold text-purple-400 hover:underline">
             Sign up
           </.link>
         </p>
@@ -76,7 +76,10 @@ defmodule EasyBillsWeb.UserLoginLive do
           class="focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-gray-700 py-3.5 px-4 border rounded-lg border-gray-700 flex items-center w-full"
         >
           <Icons.google_icon />
-          <.link navigate={~p"/login"} class="font-semibold text-purple-400 hover:underline mx-auto">
+          <.link
+            navigate={~p"/access/login"}
+            class="font-semibold text-purple-400 hover:underline mx-auto"
+          >
             Login with Google
           </.link>
         </button>

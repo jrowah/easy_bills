@@ -1,4 +1,4 @@
-defmodule EasyBillsWeb.UserResetPasswordLive do
+defmodule EasyBillsWeb.Access.ResetPasswordLive do
   use EasyBillsWeb, :live_view
 
   alias EasyBills.Accounts
@@ -31,7 +31,8 @@ defmodule EasyBillsWeb.UserResetPasswordLive do
       </.simple_form>
 
       <p class="text-center text-sm mt-4">
-        <.link href={~p"/register"}>Register</.link> | <.link href={~p"/login"}>Log in</.link>
+        <.link href={~p"/access/register"}>Register</.link>
+        | <.link href={~p"/access/login"}>Log in</.link>
       </p>
     </div>
     """
@@ -60,7 +61,7 @@ defmodule EasyBillsWeb.UserResetPasswordLive do
         {:noreply,
          socket
          |> put_flash(:info, "Password reset successfully.")
-         |> redirect(to: ~p"/login")}
+         |> redirect(to: ~p"/access/login")}
 
       {:error, changeset} ->
         {:noreply, assign_form(socket, Map.put(changeset, :action, :insert))}

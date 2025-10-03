@@ -1,4 +1,4 @@
-defmodule EasyBillsWeb.OnboardingLive.Shared.SharedComponents do
+defmodule EasyBillsWeb.Access.SharedComponents do
   @moduledoc false
   use EasyBillsWeb, :html
 

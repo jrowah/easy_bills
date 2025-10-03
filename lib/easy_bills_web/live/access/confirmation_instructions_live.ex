@@ -1,4 +1,4 @@
-defmodule EasyBillsWeb.UserConfirmationInstructionsLive do
+defmodule EasyBillsWeb.Access.ConfirmationInstructionsLive do
   use EasyBillsWeb, :live_view
 
   alias EasyBills.Accounts
@@ -21,7 +21,8 @@ defmodule EasyBillsWeb.UserConfirmationInstructionsLive do
       </.simple_form>
 
       <p class="text-center mt-4">
-        <.link href={~p"/register"}>Register</.link> | <.link href={~p"/login"}>Log in</.link>
+        <.link href={~p"/access/register"}>Register</.link>
+        | <.link href={~p"/access/login"}>Log in</.link>
       </p>
     </div>
     """
@@ -35,7 +36,7 @@ defmodule EasyBillsWeb.UserConfirmationInstructionsLive do
     if user = Accounts.get_user_by_email(email) do
       Accounts.deliver_user_confirmation_instructions(
         user,
-        &url(~p"/confirm/#{&1}")
+        &url(~p"/access/confirm/#{&1}")
       )
     end
 

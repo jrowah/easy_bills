@@ -1,0 +1,109 @@
+<div :if={@live_action == :edit_bio} class="bg-gray-100 min-h-screen">
+  <NavComponent.navbar current_user={@current_user} />
+
+  <div class="mx-auto w-1/2 py-8">
+    <.header class="text-[1.5rem]">
+      Settings
+    </.header>
+    <div class="flex justify-between w-[36%] mt-3 text-sm mb-8">
+      <.link patch={~p"/dashboard/settings"} class="focus:text-purple-500">
+        Personal
+      </.link>
+      <.link patch={~p"/dashboard/settings/edit_password"} class="focus:text-purple-500">
+        Password
+      </.link>
+      <.link
+        patch={~p"/dashboard/settings/edit_email_notifications"}
+        class="focus:text-purple-500"
+      >
+        Email Notifications
+      </.link>
+    </div>
+    <div class="space-y-12 divide-y bg-white p-10 rounded-lg">
+      <.live_component
+        module={EditBioComponent}
+        id={@current_user.id}
+        current_user={@current_user}
+        action={@live_action}
+        address_form={@address_form}
+        email_form={@email_form}
+        title={@page_title}
+        email_form_current_password={@email_form_current_password}
+        trigger_submit={@trigger_submit}
+        current_email={@current_email}
+      />
+    </div>
+  </div>
+</div>
+
+<div :if={@live_action == :edit_password} class="bg-gray-100 min-h-screen">
+  <NavComponent.navbar current_user={@current_user} />
+  <div class="mx-auto w-1/2 py-8">
+    <.header class="text-[1.5rem]">
+      Settings
+    </.header>
+    <div class="flex justify-between w-[36%] mt-3 text-sm mb-8">
+      <.link patch={~p"/dashboard/settings"} class="focus:text-purple-500">
+        Personal
+      </.link>
+      <.link patch={~p"/dashboard/settings/edit_password"} class="focus:text-purple-500">
+        Password
+      </.link>
+      <.link
+        patch={~p"/dashboard/settings/edit_email_notifications"}
+        class="focus:text-purple-500"
+      >
+        Email Notifications
+      </.link>
+    </div>
+    <div class="space-y-12 divide-y bg-white p-10 rounded-lg">
+      <.live_component
+        module={EditPasswordComponent}
+        id={@current_user.id}
+        current_user={@current_user}
+        email_form={@email_form}
+        action={@live_action}
+        title={@page_title}
+        password_form={@password_form}
+        trigger_submit={@trigger_submit}
+        current_password={@current_password}
+        current_email={@current_email}
+      />
+    </div>
+  </div>
+</div>
+
+<div :if={@live_action == :edit_email_notifications} class="bg-gray-100 min-h-screen">
+  <NavComponent.navbar current_user={@current_user} />
+  <div class="mx-auto w-1/2 py-12">
+    <.header class="text-[1.5rem]">
+      Settings
+    </.header>
+    <div class="flex justify-between w-[36%] mt-3 text-sm mb-8">
+      <.link patch={~p"/dashboard/settings"} class="focus:text-purple-500">
+        Personal
+      </.link>
+      <.link patch={~p"/dashboard/settings/edit_password"} class="focus:text-purple-500">
+        Password
+      </.link>
+      <.link
+        patch={~p"/dashboard/settings/edit_email_notifications"}
+        class="focus:text-purple-500"
+      >
+        Email Notifications
+      </.link>
+    </div>
+    <div class="space-y-12 divide-y bg-white p-10 rounded-lg">
+      <.live_component
+        module={EmailNotificationsComponent}
+        id={@current_user.id}
+        current_user={@current_user}
+        email_notifications_form={@email_notifications_form}
+        email_form={@email_form}
+        action={@live_action}
+        title={@page_title}
+        trigger_submit={@trigger_submit}
+      />
+    </div>
+  </div>
+</div>

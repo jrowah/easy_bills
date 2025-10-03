@@ -58,7 +58,20 @@ defmodule EasyBills.Accounts do
       ** (Ecto.NoResultsError)
 
   """
-  def get_user!(id), do: Repo.get!(User, id)
+  def get_user!(id) do
+    User
+    |> Repo.get!(id)
+    |> Repo.preload(:business_address)
+  end
+
+  @doc """
+  Gets a single user.
+  """
+  def get_user_with_business_address(id) do
+    User
+    |> preload(:business_address)
+    |> Repo.get!(id)
+  end
 
   ## User registration
 
@@ -106,6 +119,20 @@ defmodule EasyBills.Accounts do
   """
   def change_user_email(user, attrs \\ %{}) do
     User.email_changeset(user, attrs, validate_email: false)
+  end
+
+  @doc """
+  Returns an `%Ecto.Changeset{}` for changing the user notifications.
+
+  ## Examples
+
+      iex> change_user_notifications(user)
+      %Ecto.Changeset{data: %User{}}
+
+  """
+
+  def change_user_notifications(user, attrs \\ %{}) do
+    User.notifications_changeset(user, attrs)
   end
 
   @doc """
@@ -162,7 +189,7 @@ defmodule EasyBills.Accounts do
 
   ## Examples
 
-      iex> deliver_user_update_email_instructions(user, current_email, &url(~p"/settings/confirm_email/#{&1})")
+      iex> deliver_user_update_email_instructions(user, current_email, &url(~p"/dashboard/settings/confirm_email/#{&1})")
       {:ok, %{to: ..., body: ...}}
 
   """
@@ -183,6 +210,24 @@ defmodule EasyBills.Accounts do
     |> BusinessAddress.changeset(address_params)
     |> Ecto.Changeset.put_assoc(:user, user)
     |> Repo.insert()
+  end
+
+  @doc """
+  Update user to add avatar url
+  """
+
+  def add_user_avatar(changeset) do
+    Repo.update(changeset)
+  end
+
+  @doc """
+  Returns an `%Ecto.Changeset{}` for changing the user address.
+  """
+
+  def change_user_address(user, address_params \\ %{}) do
+    %BusinessAddress{}
+    |> BusinessAddress.changeset(address_params)
+    |> Ecto.Changeset.put_assoc(:user, user)
   end
 
   @doc """
@@ -369,5 +414,22 @@ defmodule EasyBills.Accounts do
       {:ok, %{user: user}} -> {:ok, user}
       {:error, :user, changeset, _} -> {:error, changeset}
     end
+  end
+
+  @doc """
+  Deletes the user and all associated tokens and data from the database.
+
+  Returns an error tuple if an invalid token was given.
+
+  ## Examples
+
+      iex> delete_user(user)
+      {:ok, %User{}}
+
+      iex> delete_user(user)
+      {:error, %Ecto.Changeset{}}
+  """
+  def delete_user(user) do
+    Repo.delete(user)
   end
 end

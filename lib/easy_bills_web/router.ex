@@ -1,7 +1,7 @@
 defmodule EasyBillsWeb.Router do
   use EasyBillsWeb, :router
 
-  import EasyBillsWeb.UserAuth
+  import EasyBillsWeb.Hooks.UserAuth
 
   pipeline :browser do
     plug :accepts, ["html"]
@@ -20,14 +20,69 @@ defmodule EasyBillsWeb.Router do
   scope "/", EasyBillsWeb do
     pipe_through :browser
 
-    # get "/", PageController, :home
-    live "/", HomeLive
+    scope "/", Landing do
+      live "/", LandingLive, :index
+    end
   end
 
   # Other scopes may use custom stacks.
   # scope "/api", EasyBillsWeb do
   #   pipe_through :api
   # end
+
+  # Authentication routes
+  scope "/auth", EasyBillsWeb do
+    pipe_through :browser
+
+    post "/login", SessionController, :create
+
+    delete "/logout", SessionController, :delete
+  end
+
+  scope "/access", EasyBillsWeb.Access do
+    pipe_through [:browser]
+
+    live_session :current_user,
+      on_mount: [{EasyBillsWeb.Hooks.UserAuth, :mount_current_user}] do
+      live "/confirm/:token", ConfirmationLive, :edit
+      live "/confirm", ConfirmationInstructionsLive, :new
+    end
+
+    live_session :redirect_if_user_is_authenticated,
+      on_mount: [{EasyBillsWeb.Hooks.UserAuth, :redirect_if_user_is_authenticated}] do
+      live "/register", RegistrationLive, :new
+      live "/login", LoginLive, :new
+      live "/reset_password", ForgotPasswordLive, :new
+      live "/reset_password/:token", ResetPasswordLive, :edit
+    end
+  end
+
+  scope "/dashboard", EasyBillsWeb.Dashboard do
+    pipe_through [:browser, :require_authenticated_user]
+
+    live_session :require_authenticated_user,
+      on_mount: [
+        # {EasyBillsWeb.Hooks.UserAuth, :ensure_authenticated},
+        EasyBillsWeb.Dashboard.Hooks.Session
+      ],
+      root_layout: {EasyBillsWeb.Layouts, :dashboard},
+      layout: {EasyBillsWeb.Layouts, :dashboard_live} do
+      live "/", Home.IndexLive, :index
+      live "/invoices", Invoices.IndexLive, :index
+      live "/invoices/new", Invoices.IndexLive, :new
+      live "/invoices/:id/edit", Invoices.IndexLive, :edit
+
+      live "/invoices/:id", Invoices.ShowLive, :show
+      live "/invoices/:id/show/edit", Invoices.ShowLive, :edit
+
+      live "/expenses", Expenses.IndexLive, :index
+
+      live "/settings", Settings.IndexLive, :edit_bio
+      live "/settings/edit_password", Settings.IndexLive, :edit_password
+      live "/settings/edit_email_notifications", Settings.IndexLive, :edit_email_notifications
+      live "/settings/confirm_email/:token", Settings.IndexLive, :confirm_email
+    end
+  end
 
   # Enable LiveDashboard and Swoosh mailbox preview in development
   if Application.compile_env(:easy_bills, :dev_routes) do
@@ -45,47 +100,6 @@ defmodule EasyBillsWeb.Router do
         live_dashboard "/dashboard", metrics: EasyBillsWeb.Telemetry
         forward "/mailbox", Plug.Swoosh.MailboxPreview
       end
-    end
-  end
-
-  ## Authentication routes
-
-  scope "/", EasyBillsWeb do
-    pipe_through [:browser, :redirect_if_user_is_authenticated]
-
-    live_session :redirect_if_user_is_authenticated,
-      on_mount: [{EasyBillsWeb.UserAuth, :redirect_if_user_is_authenticated}] do
-      live "/register", UserRegistrationLive, :new
-      live "/login", UserLoginLive, :new
-      live "/reset_password", UserForgotPasswordLive, :new
-      live "/reset_password/:token", UserResetPasswordLive, :edit
-    end
-
-    post "/login", UserSessionController, :create
-  end
-
-  scope "/", EasyBillsWeb do
-    pipe_through [:browser, :require_authenticated_user]
-
-    live_session :require_authenticated_user,
-      on_mount: [{EasyBillsWeb.UserAuth, :ensure_authenticated}] do
-      live "/settings", UserSettingsLive, :edit
-      live "/settings/confirm_email/:token", UserSettingsLive, :confirm_email
-      live "/welcome", UserWelcomeLive
-      live "/address", UserAddressLive
-      live "/invoices", InvoicesLive
-    end
-  end
-
-  scope "/", EasyBillsWeb do
-    pipe_through [:browser]
-
-    delete "/logout", UserSessionController, :delete
-
-    live_session :current_user,
-      on_mount: [{EasyBillsWeb.UserAuth, :mount_current_user}] do
-      live "/confirm/:token", UserConfirmationLive, :edit
-      live "/confirm", UserConfirmationInstructionsLive, :new
     end
   end
 end

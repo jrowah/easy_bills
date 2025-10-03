@@ -108,7 +108,7 @@ defmodule EasyBills.MixProject do
         "credo --strict",
         "dialyzer"
       ],
-      "ci.formatting": ["format --check-formatted", "cmd --cd assets npx prettier -c .."],
+      "ci.formatting": ["format --check-formatted", "cmd --cd assets npx prettier -c ."],
       "ci.migrations": [
         "ecto.create --quiet",
         "ecto.migrate --quiet",

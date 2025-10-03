@@ -1,78 +1,16 @@
-defmodule EasyBillsWeb.UserSettingsLive do
+defmodule EasyBillsWeb.Dashboard.Settings.IndexLive do
+  @doc """
+  Settings LiveView
+  """
   use EasyBillsWeb, :live_view
 
   alias EasyBills.Accounts
+  alias EasyBillsWeb.CommonComponents.NavComponent
+  alias EasyBillsWeb.SettingsComponents.EditBioComponent
+  alias EasyBillsWeb.SettingsComponents.EditPasswordComponent
+  alias EasyBillsWeb.SettingsComponents.EmailNotificationsComponent
 
-  def render(assigns) do
-    ~H"""
-    <.header class="text-center">
-      Account Settings
-      <:subtitle>Manage your account email address and password settings</:subtitle>
-    </.header>
-
-    <div class="space-y-12 divide-y">
-      <div>
-        <.simple_form
-          for={@email_form}
-          id="email_form"
-          phx-submit="update_email"
-          phx-change="validate_email"
-        >
-          <.input field={@email_form[:email]} type="email" label="Email" required />
-          <.input
-            field={@email_form[:current_password]}
-            name="current_password"
-            id="current_password_for_email"
-            type="password"
-            label="Current password"
-            value={@email_form_current_password}
-            required
-          />
-          <:actions>
-            <.button phx-disable-with="Changing...">Change Email</.button>
-          </:actions>
-        </.simple_form>
-      </div>
-      <div>
-        <.simple_form
-          for={@password_form}
-          id="password_form"
-          action={~p"/login?_action=password_updated"}
-          method="post"
-          phx-change="validate_password"
-          phx-submit="update_password"
-          phx-trigger-action={@trigger_submit}
-        >
-          <.input
-            field={@password_form[:email]}
-            type="hidden"
-            id="hidden_user_email"
-            value={@current_email}
-          />
-          <.input field={@password_form[:password]} type="password" label="New password" required />
-          <.input
-            field={@password_form[:password_confirmation]}
-            type="password"
-            label="Confirm new password"
-          />
-          <.input
-            field={@password_form[:current_password]}
-            name="current_password"
-            type="password"
-            label="Current password"
-            id="current_password_for_password"
-            value={@current_password}
-            required
-          />
-          <:actions>
-            <.button phx-disable-with="Changing...">Change Password</.button>
-          </:actions>
-        </.simple_form>
-      </div>
-    </div>
-    """
-  end
-
+  @impl true
   def mount(%{"token" => token}, _session, socket) do
     socket =
       case Accounts.update_user_email(socket.assigns.current_user, token) do
@@ -83,26 +21,39 @@ defmodule EasyBillsWeb.UserSettingsLive do
           put_flash(socket, :error, "Email change link is invalid or it has expired.")
       end
 
-    {:ok, push_navigate(socket, to: ~p"/settings")}
+    {:ok, push_navigate(socket, to: ~p"/dashboard/settings")}
   end
 
   def mount(_params, _session, socket) do
     user = socket.assigns.current_user
     email_changeset = Accounts.change_user_email(user)
-    password_changeset = Accounts.change_user_password(user)
+
+    password_changeset =
+      Accounts.change_user_password(user)
+
+    address_changeset =
+      Accounts.change_user_address(user)
 
     socket =
       socket
       |> assign(:current_password, nil)
       |> assign(:email_form_current_password, nil)
       |> assign(:current_email, user.email)
+      |> assign(:address_form, to_form(address_changeset))
       |> assign(:email_form, to_form(email_changeset))
+      |> assign(:email_notifications_form, to_form(email_changeset))
       |> assign(:password_form, to_form(password_changeset))
       |> assign(:trigger_submit, false)
 
     {:ok, socket}
   end
 
+  @impl true
+  def handle_params(params, _url, socket) do
+    {:noreply, apply_action(socket, socket.assigns.live_action, params)}
+  end
+
+  @impl true
   def handle_event("validate_email", params, socket) do
     %{"current_password" => password, "user" => user_params} = params
 
@@ -124,7 +75,7 @@ defmodule EasyBillsWeb.UserSettingsLive do
         Accounts.deliver_user_update_email_instructions(
           applied_user,
           user.email,
-          &url(~p"/settings/confirm_email/#{&1}")
+          &url(~p"/dashboard/settings/confirm_email/#{&1}")
         )
 
         info = "A link to confirm your email change has been sent to the new address."
@@ -163,5 +114,35 @@ defmodule EasyBillsWeb.UserSettingsLive do
       {:error, changeset} ->
         {:noreply, assign(socket, password_form: to_form(changeset))}
     end
+  end
+
+  def handle_event("delete_account", _params, socket) do
+    user = socket.assigns.current_user
+
+    case Accounts.delete_user(user) do
+      {:ok, _user} ->
+        {:noreply,
+         socket
+         |> put_flash(:info, "Your account has been deleted.")
+         |> push_navigate(to: ~p"/")}
+
+      {:error, changeset} ->
+        {:noreply, assign(socket, changeset: changeset)}
+    end
+  end
+
+  defp apply_action(socket, :edit_bio, _params) do
+    socket
+    |> assign(:page_title, "Edit Profile Information")
+  end
+
+  defp apply_action(socket, :edit_password, _params) do
+    socket
+    |> assign(:page_title, "Change Password")
+  end
+
+  defp apply_action(socket, :edit_email_notifications, _params) do
+    socket
+    |> assign(:page_title, "Edit Notification Preferences")
   end
 end

@@ -1,4 +1,4 @@
-defmodule EasyBillsWeb.UserForgotPasswordLive do
+defmodule EasyBillsWeb.Access.ForgotPasswordLive do
   use EasyBillsWeb, :live_view
 
   alias EasyBills.Accounts
@@ -38,7 +38,8 @@ defmodule EasyBillsWeb.UserForgotPasswordLive do
           </:actions>
         </.simple_form>
         <p class="text-center text-sm mt-4">
-          <.link href={~p"/register"}>Register</.link> | <.link href={~p"/login"}>Log in</.link>
+          <.link href={~p"/access/register"}>Register</.link>
+          | <.link href={~p"/access/login"}>Log in</.link>
         </p>
       </div>
     </RegularTemplate.regular>
@@ -53,7 +54,7 @@ defmodule EasyBillsWeb.UserForgotPasswordLive do
     if user = Accounts.get_user_by_email(email) do
       Accounts.deliver_user_reset_password_instructions(
         user,
-        &url(~p"/reset_password/#{&1}")
+        &url(~p"/access/reset_password/#{&1}")
       )
     end
 

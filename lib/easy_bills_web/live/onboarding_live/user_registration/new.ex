@@ -40,9 +40,8 @@ defmodule EasyBillsWeb.OnboardingLive.UserRegistration.New do
             phx-submit="save"
             phx-change="validate"
             phx-trigger-action={@trigger_submit}
-            action={~p"/login?_action=registered"}
+            action={~p"/auth/login?_action=registered"}
             method="post"
-            class="mt-[-20px]"
           >
             <.error :if={@check_errors}>
               Oops, something went wrong! Please check the errors below.
@@ -74,7 +73,7 @@ defmodule EasyBillsWeb.OnboardingLive.UserRegistration.New do
               required
             />
             <div class="relative">
-              <NewPasswordInputComponent.new_password_input form={@form} />
+              <NewPasswordInputComponent.new_password_input form={@form} label="Password" />
             </div>
 
             <label class="flex flex-col left-0 flex-row-reverse items-center justify-between">
@@ -95,7 +94,7 @@ defmodule EasyBillsWeb.OnboardingLive.UserRegistration.New do
           </.simple_form>
           <p class="mt-6 ml-[20%]">
             Already have an account?
-            <.link navigate={~p"/login"} class="font-semibold text-purple-400 hover:underline">
+            <.link navigate={~p"/access/login"} class="font-semibold text-purple-400 hover:underline">
               Sign in
             </.link>
           </p>
