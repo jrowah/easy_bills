@@ -303,7 +303,7 @@ defmodule GitHubWorkFlows do
       name: name,
       "runs-on": "ubuntu-latest",
       env: [
-        "elixir-version": "1.16.1",
+        "elixir-version": "1.17.3",
         "otp-version": "25.3.2.9"
       ],
       steps:
